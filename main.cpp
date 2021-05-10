@@ -15,8 +15,6 @@
 #include <iostream>
 #include <fstream>
 
-#include <vector>
-
 #include "iHexPP.hpp"
 
 using namespace SudoMaker;
@@ -27,20 +25,14 @@ int main(int argc, char **argv) {
 
 	iHexPP::Decoder dec;
 
-	std::vector<uint8_t> buf;
-	size_t max_size = 0;
+	dec.read_callback = [](uint8_t record_type, uint32_t addr, const uint8_t *data, size_t len){
+		if (record_type == iHexPP::IHEX_DATA_RECORD) {
+			printf("%08x: ", addr);
 
-	dec.read_callback = [&](uint32_t addr, const uint8_t *data, size_t len){
-		size_t required_size = addr + len;
-
-		if (required_size > max_size) {
-			max_size = required_size;
-			buf.resize(max_size);
+			for (size_t i = 0; i < len; i++) {
+				printf("%02x ", data[i]);
+			}
 		}
-
-		memcpy(buf.data()+addr, data, len);
-
-
 	};
 
 	while (std::getline(infile, line)) {
@@ -48,10 +40,4 @@ int main(int argc, char **argv) {
 		puts("");
 	}
 
-	for (size_t i=0; i<buf.size(); i++) {
-		if (i % 16 == 0)
-			printf("\n%08x: ", i);
-
-		printf("%02x ", buf[i]);
-	}
 }

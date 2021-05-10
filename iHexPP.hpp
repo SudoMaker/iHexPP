@@ -71,7 +71,7 @@ namespace SudoMaker {
 		public:
 			Decoder() = default;
 
-			std::function<void(uint32_t addr, const uint8_t *data, uint8_t len)> read_callback;
+			std::function<void(uint8_t record_type, uint32_t addr, const uint8_t *data, uint8_t len)> read_callback;
 
 			void reset() noexcept;
 

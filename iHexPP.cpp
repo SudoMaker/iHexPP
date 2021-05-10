@@ -106,7 +106,7 @@ void Decoder::end_read() {
 		sum = (~sum + 1U) ^ *eptr; // *eptr is the received checksum
 	}
 
-	read_callback(ihex.address, ihex.data, ihex.length);
+	read_callback(type, ihex.address, ihex.data, ihex.length);
 
 	if (type == IHEX_EXTENDED_LINEAR_ADDRESS_RECORD) {
 		ihex.address &= 0xFFFFU;
